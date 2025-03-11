@@ -1,16 +1,27 @@
-from llama_index.llms.ollama import Ollama
-from llama_index.llms.groq import Groq
+import os
+from dotenv import load_dotenv
+from llama_index.llms.gemini import Gemini
+
+
+# Load environment variables from .env
+load_dotenv()
+
+# Get the API key
+api_key = os.getenv("GEMINI_API_KEY")
 
 class Generators:
-    def __init__(self, model="llama-3.3-70b-versatile"):
-        # self.llm = Ollama(model=model, temperature=0)
+
+    def __init__(self, model="models/gemini-2.0-flash"):
         """
         Initializes the Generators class with a specified language model.
 
         Args:
-            model (str): The name of the model to use. Defaults to "llama-3.3-70b-versatile".
+            model (str): The name of the model to use. Defaults to "models/gemini-2.0-flash.
         """
-        self.llm = Groq(model=model, api_key="your_api_key", temperature=0)
+        self.llm = Gemini(
+            model=model,
+            api_key=api_key
+        )
 
     def get_llm(self):
         """
