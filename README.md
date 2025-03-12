@@ -1,5 +1,7 @@
 # Agentic-AI-Chatbot-Llamaindex and Gemini API
-Agentic AI ChatBot using Llamaindex and gemini-2.0-flash.
+Agentic AI ChatBot using Llamaindex and gemini-2.0-flash. 
+
+This is intended to run locally. AI chatbot capable of using tools and making function calls.
 
 ### To install the requirements use:
 ```bash
