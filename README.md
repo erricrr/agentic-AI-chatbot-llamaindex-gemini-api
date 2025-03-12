@@ -1,4 +1,4 @@
-# Agentic-AI-Chatbot-Llamaindex and Gemini
+# Agentic-AI-Chatbot-Llamaindex and Gemini API
 Agentic AI ChatBot using Llamaindex and gemini-2.0-flash.
 
 ### To install the requirements use:
