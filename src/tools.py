@@ -1,5 +1,3 @@
-# from dotenv import load_dotenv
-# load_dotenv()
 import math
 
 session = dict()
@@ -9,7 +7,7 @@ def multiply(a: float, b: float) -> float:
     make sure that both numbers a, b are real numbers and if not try to convert them to real numbers
     args:
         a: float
-        b: float    
+        b: float
     requires:
         only_real_numbers
     """
@@ -17,11 +15,11 @@ def multiply(a: float, b: float) -> float:
 
 
 def add(a: float, b: float) -> float:
-    """useful tool to Add two numbers and returns the sum, 
+    """useful tool to Add two numbers and returns the sum,
     make sure that both numbers a, b are real numbers and if not try to convert them to real numbers
     args:
         a: float
-        b: float    
+        b: float
 
     requires:
         only_real_numbers
@@ -67,18 +65,18 @@ def calculate_power(a: float, b: float) -> float:
 
 def only_real_numbers(a: float) -> float:
     """ useful tool to verify if the number is real"""
-    try: 
+    try:
         float(a)
-    except ValueError: 
+    except ValueError:
         return f"{a} is not a real number so try converting it to a float and try again"
 
 def convert_to_real_number(a: float) -> float:
     """ useful tool to convert a string to a real number"""
-    try: 
+    try:
         return float(a)
-    except ValueError: 
-        return f"{a} cannot be converted to a real number"    
-    
+    except ValueError:
+        return f"{a} cannot be converted to a real number"
+
 def miscellaneous() -> str:
     """Handle miscellaneous tasks that do not fit into the other tools only returns a string"""
     return "Rephrase and give this answer in words: Hi there, I can't help you with that, if you have any other maths questions please ask them"
@@ -89,7 +87,7 @@ def divide(a: float, b: float) -> float:
     make sure that both numbers a, b are real numbers and if not try to convert them to real numbers
     args:
         a: float
-        b: float    
+        b: float
     requires:
         only_real_numbers
     """
@@ -100,26 +98,8 @@ def subtract(a: float, b: float) -> float:
     make sure that both numbers a, b are real numbers and if not try to convert them to real numbers
     args:
         a: float
-        b: float    
+        b: float
     requires:
         only_real_numbers
     """
     return float(a) - float(b)
-
-def ask_name(name: str) -> str:
-    """useful tool to ask the name of the user"""
-    if session.get("name"):
-        return "name is already set to " + session["name"]
-    else:
-        return "Hi there, what is your name?"
-
-def update_name(name_provided_by_user: str) -> str:
-    """useful tool to update the name of the user in memory"""
-    session["name"] = name_provided_by_user
-
-def greet_user_and_ask_name() -> str:
-    """Useful tool to greet the user, asks for their name using the ask_name tool, keep it in memory and give user the list of 
-    things they can do; don't provide tool names, give them functionality descriptions
-    
-    requires: ask_name, update_name"""
-    return "tell the user in a friendly way what you can do"
