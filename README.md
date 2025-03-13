@@ -8,7 +8,7 @@ This is intended to run locally. AI chatbot capable of using tools and making fu
 pip install -r requirements.txt
 ```
 
-### Add your Gemini API to the `.env` file:
+### Add your Gemini API key to a `.env` file (or paste your API key directly):
 `
 GEMINI_API_KEY = 'YOUR_API_KEY'
 `
