@@ -17,9 +17,36 @@ def respond(message, history):
     Returns:
         dict: A dictionary with the keys "role" and "content", where "role" is "assistant" and "content" is the response message.
     """
-    response = agent.chat(message)
-    response = {"role": "assistant", "content": response.response}
-    return response
+    print("Added user message to memory:", message)
+
+    try:
+        # Get response from agent
+        agent_response = agent.chat(message)
+
+        # Check if response or response.response is None
+        if agent_response is None:
+            content = "I apologize, but I couldn't process that math problem correctly. Please try rephrasing your question."
+        elif hasattr(agent_response, 'response') and agent_response.response is None:
+            content = "I apologize, but I couldn't process that math problem correctly. Please try rephrasing your question."
+        elif hasattr(agent_response, 'response'):
+            # Normal case - we have a valid response
+            content = agent_response.response
+            # Check if content is 'None' string or empty
+            if content is None or content.strip() == "" or content.strip().lower() == "none":
+                content = "I apologize, but I couldn't process that math problem correctly. Please try rephrasing your question."
+        else:
+            # Fallback if response has unexpected structure
+            content = str(agent_response)
+            if content is None or content.strip() == "" or content.strip().lower() == "none":
+                content = "I apologize, but I couldn't process that math problem correctly. Please try rephrasing your question."
+
+        print("=== LLM Response ===")
+        print(content)
+
+        return {"role": "assistant", "content": content}
+    except Exception as e:
+        print(f"Error processing message: {e}")
+        return {"role": "assistant", "content": "I encountered an error while processing your request. Please try again with a different question."}
 
 def reset_agent():
     """
@@ -32,7 +59,7 @@ def reset_agent():
     print("resetting agent current chat history: ", agent.chat_history)
     agent.reset()
 
-theme = gr.themes.Citrus()
+theme = gr.themes.Soft(primary_hue='emerald')
 
 with gr.Blocks(theme=theme) as demo:
     gr.Markdown("## Agentic Tool-Calling Chatbot")

@@ -33,15 +33,25 @@ class AgentController:
         logger.info("creating AgentController")
         self.llm = Generators().get_llm()
         self.system_prompt = """
-                                INSTRUCTIONS: You are a maths tools expert. You are capable to have chain of thoughts and You will only use the tools available to you and without getting the function output you wouldn't proceed.
+                                INSTRUCTIONS: You are a math tools expert. You are capable of having chain of thoughts and you will only use the tools available to you. You must wait for each function's output before proceeding to the next step.
 
-                                avoid getting into this mess like this:
+                                CRITICAL: Word problems are ALWAYS math problems. ANY problem that involves numbers, quantities, rates, time, money, or measurements IS a math problem and should NEVER use the miscellaneous tool.
 
-                                Calling function: subtract with args: {"a": {"function": "subtract", "args": [{"function": "calculate_power", "args": [9, 16]}, {"function": "calculate_power", "args": [7, 18]}]}, "b": 3281711}
+                                IMPORTANT: The miscellaneous tool should ONLY be used when the query has absolutely nothing to do with mathematics (e.g., questions about politics, history, entertainment, etc.).
 
-                                always pass the desired inputs to the functions you call.
+                                IMPORTANT FOR WORD PROBLEMS:
+                                1. Math word problems (even complex ones involving scenarios, rates, time, etc.) should NEVER use the miscellaneous tool.
+                                2. Always use the appropriate math tools to solve word problems step by step.
+                                3. For word problems, first identify the key variables and relationships, then use the appropriate tools.
+                                4. Always double-check your calculations and reasoning.
 
-                                NOTE: You will ALWAYS evaluate the user's query and perfom query classification and provide three things:
+                                FUNCTION CALLING RULES:
+                                1. Always pass simple numeric values directly to functions, not nested function calls.
+                                2. Avoid nesting function calls like this: subtract({"a": {"function": "subtract", "args": [...]}}, ...)
+                                3. Instead, calculate intermediate values first, then use those in subsequent function calls.
+                                4. Always use the simplest approach to solve the problem.
+
+                                NOTE: You will ALWAYS evaluate the user's query and provide three things:
                                 answer, tool_used, reasoning.
 
                                 like this:
@@ -57,6 +67,15 @@ class AgentController:
                                 - Tool Used: multiply
                                 - Reasoning: The tool was used to calculate the product of two numbers.
 
+                                Example for math word problem:
+                                "A farming field can be ploughed by 6 tractors in 4 days. When 6 tractors work together, each of them ploughs 120 hectares a day. If two of the tractors were moved to another field, then the remaining 4 tractors could plough the same field in 5 days. How many hectares a day would one tractor plough then?"
+
+                                For this problem, you would use the appropriate math tools (multiply, divide, etc.) to solve it step by step, NOT the miscellaneous tool.
+
+                                Example for non-math query (like asking about politics, history, etc.):
+                                Answer: Hi there, I can't help you with that, if you have any other math questions please ask them
+                                - Tool Used: miscellaneous
+                                - Reasoning: The query was not related to mathematics or calculations.
 
                                 Solve the queries STEP by STEP and feel free to use the tools available to you and do not hallucinate or make assumptions.
                                 """
@@ -73,11 +92,34 @@ class AgentController:
         :return: An initialized FunctionCallingAgent instance.
         """
         logger.info("creating Agent")
-        agent = FunctionCallingAgent.from_tools([multiply_tool, add_tool, sin_tool, cos_tool, log_tool, exp_tool,
-                                                 real_number_tool ,convert_to_real_number_tool, miscellaneous_tool,
-                                                 divide_tool, subtract_tool],
-                                        llm=self.llm,verbose=True,
-                                        system_prompt=self.system_prompt)
+
+        # Reorder tools to prioritize basic math operations first, then complex ones, and miscellaneous last
+        # This ordering can help the model make better decisions about which tool to use
+        agent = FunctionCallingAgent.from_tools([
+                # Basic math operations first
+                add_tool,
+                subtract_tool,
+                multiply_tool,
+                divide_tool,
+
+                # More complex operations
+                exp_tool,
+                sin_tool,
+                cos_tool,
+                log_tool,
+
+                # Utility tools
+                real_number_tool,
+                convert_to_real_number_tool,
+
+                # Miscellaneous tool last (least priority)
+                miscellaneous_tool
+            ],
+            llm=self.llm,
+            verbose=True,
+            system_prompt=self.system_prompt
+        )
+
         logger.info("Agent created")
         return agent
 
@@ -95,5 +137,25 @@ class AgentController:
         Returns:
             The agent's response to the provided query.
         """
-        response = self.agent.chat(query)
-        return response
+        try:
+            # Try to get a response from the agent
+            response = self.agent.chat(query)
+
+            # Check if response is None or empty
+            if response is None or str(response).strip() == "" or str(response).strip().lower() == "none":
+                # This is likely a math word problem that failed to process correctly
+                # Create a fallback response that encourages the user to try again
+                logger.warning("Received None or empty response for query: %s", query)
+
+                # Check if it's likely a word problem (contains numbers and narrative elements)
+                if any(char.isdigit() for char in query) and len(query.split()) > 10:
+                    return "I apologize, but I couldn't process that math word problem correctly. Please try rephrasing your question or breaking it down into smaller steps."
+                else:
+                    return "I apologize, but I couldn't process that request. Could you please rephrase your question?"
+
+            return response
+
+        except Exception as e:
+            # Log the error and return a friendly message
+            logger.error("Error processing query: %s. Error: %s", query, str(e))
+            return "I encountered an error while processing your request. Please try again with a different question."

@@ -26,7 +26,7 @@ def add(a: float, b: float) -> float:
     """
     return float(a) + float(b)
 
-# add complex maths tools
+# add complex math tools
 def calculate_sin(a: float) -> float:
     """ useful tool to calculate the sin of a number
     IMPORTANT: the value of a will be in degrees, unless user specifically requests it to be in radians
@@ -78,7 +78,12 @@ def convert_to_real_number(a: float) -> float:
         return f"{a} cannot be converted to a real number"
 
 def miscellaneous() -> str:
-    """Handle miscellaneous tasks that do not fit into the other tools only returns a string"""
+    """CRITICAL: Use this tool ONLY for queries that have absolutely nothing to do with mathematics, calculations, or numerical reasoning.
+    DO NOT USE THIS TOOL FOR ANY WORD PROBLEMS INVOLVING NUMBERS, QUANTITIES, RATES, TIME, MONEY, OR MEASUREMENTS.
+    This tool should NOT be used for math word problems, even if they contain complex scenarios, rates, time calculations, etc.
+    Math word problems should always be solved using the appropriate math tools (add, multiply, divide, etc.).
+    Only use this tool for completely non-mathematical topics like politics, history, entertainment, etc.
+    If there is ANY mathematical component to the query, DO NOT use this tool."""
     return "Rephrase and give this answer in words: Hi there, I can't help you with that, if you have any other maths questions please ask them"
 
 
