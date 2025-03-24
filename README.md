@@ -15,5 +15,5 @@ GEMINI_API_KEY = 'YOUR_API_KEY'
 
 ### To start the Gradio UI:
 ```bash
-python ./simple_ui.py
+python ./app.py
 ```
