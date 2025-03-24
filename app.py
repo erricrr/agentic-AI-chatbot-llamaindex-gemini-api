@@ -74,4 +74,7 @@ with gr.Blocks(theme=theme) as demo:
                     #  textbox=gr.Textbox(placeholder="Ready to solve some math? Type your problem here!", container=False),
                      )
 
+
+
+
 demo.launch(share=False)
