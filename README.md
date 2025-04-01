@@ -3,7 +3,10 @@ Agentic AI ChatBot using Llamaindex and gemini-2.0-flash—capable of using tool
 
 This application is designed to run locally, leveraging external APIs.
 
-### To use, install the requirements:
+### Install Requirements 
+**Fork** this repository and **clone** it in your virtual environment.
+
+Install the requirements:
 ```bash
 pip install -r requirements.txt
 ```
