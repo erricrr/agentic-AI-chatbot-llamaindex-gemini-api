@@ -1,7 +1,5 @@
 # Agentic AI Chatbot using Llamaindex and Gemini API
-Agentic AI ChatBot using Llamaindex and gemini-2.0-flash—capable of using tools and making function calls.
-
-This application is designed to run locally, leveraging external APIs.
+Math-focused Agentic AI ChatBot using Llamaindex and gemini-2.0-flash—specialized in performing mathematical operations through tool usage and function calls. This application is designed to run locally, leveraging external APIs.
 
 ### Install Requirements 
 **Fork** this repository and **clone** it in your virtual environment.
